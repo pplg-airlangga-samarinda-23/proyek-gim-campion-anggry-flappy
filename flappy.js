@@ -35,8 +35,6 @@ let velocityY = 0; //bird jump speed
 let gravity = 0.4;
 
 let gameOver = false;
-let score = 0;
-let highscore = 0;
 
 window.onload = function () {
     board = document.getElementById("board");
@@ -44,6 +42,8 @@ window.onload = function () {
     board.width = boardWidth;
     context = board.getContext("2d"); //used for drawing on the board
 
+    highscore = localStorage.getItem("highscore") ? parseFloat(localStorage.getItem("highscore")) : 0;
+    score = localStorage.getItem("score") ? parseFloat(localStorage.getItem("score")) : 0;       
     //draw flappy bird
     // context.fillStyle = "green";
     // context.fillRect(bird.x, bird.y, bird.width, bird.height);
@@ -118,6 +118,8 @@ function update() {
     context.fillText(highscore,200,70)
 
     if (gameOver) {
+        localStorage.setItem("score",score);
+        localStorage.setItem("highscore",highscore);
         context.fillText("GAME OVER",50, 240);
     }
     if (score > highscore) {
