@@ -6,8 +6,8 @@ let boardHeight = 640;
 let context;
 
 //bird
-let birdWidth = 136; //width/height ratio = 408/228 = 17/12
-let birdHeight = 56;
+let birdWidth = 80; //width/height ratio = 408/228 = 17/12
+let birdHeight = 60;
 let birdX = boardWidth / 32;
 let birdY = boardHeight / 8;
 let birdImg;
@@ -36,6 +36,7 @@ let gravity = 0.4;
 
 let gameOver = false;
 let score = 0;
+let highscore = 0;
 
 window.onload = function () {
     board = document.getElementById("board");
@@ -80,6 +81,7 @@ function update() {
 
     if (bird.y > board.height) {
         gameOver = true;
+        localStorage.setItem
     }
 
     //pipes
@@ -91,6 +93,7 @@ function update() {
         if (!pipe.passed && bird.x > pipe.x + pipe.width) {
             score += 0.5; //0.5 because there are 2 pipes! so 0.5*2 = 1, 1 for each set of pipes
             pipe.passed = true;
+            localStorage.setItem("score",score);
         }
 
         if (detectCollision(bird, pipe)) {
@@ -105,12 +108,24 @@ function update() {
 
     //score
     context.fillStyle = "black";
-    context.font = "45px sans-serif";
-    context.fillText(score, 5, 45);
+    context.font = "35px sans-serif";
+    context.fillText("score",5,30)
+    context.fillText( score, 5, 70);
+
+    context.fillStyle ="black";
+    context.font = "35px sans-serif";
+    context.fillText("highscore",200,30)
+    context.fillText(highscore,200,70)
 
     if (gameOver) {
-        context.fillText("GAME OVER", 5, 90);
+        context.fillText("GAME OVER",50, 240);
     }
+    if (score > highscore) {
+        highscore = score;
+        localStorage.setItem("highscore",highscore);
+        document.getElementById("highscore").innerText = highscore;
+    }
+
 }
 
 function placePipes() {
@@ -122,7 +137,7 @@ function placePipes() {
     // 0 -> -128 (pipeHeight/4)
     // 1 -> -128 - 256 (pipeHeight/4 - pipeHeight/2) = -3/4 pipeHeight
     let randomPipeY = pipeY - pipeHeight / 4 - Math.random() * (pipeHeight / 2);
-    let openingSpace = board.height / 4;
+    let openingSpace = board.height / 3;
 
     let topPipe = {
         img: topPipeImg,
