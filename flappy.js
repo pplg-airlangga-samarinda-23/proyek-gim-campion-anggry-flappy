@@ -64,6 +64,23 @@ window.onload = function () {
     setInterval(placePipes, 3000); //every 3 seconds
     document.addEventListener("keydown", moveBird);
 }
+document.getElementById('start-button').addEventListener('click', function() {
+    // Logika untuk memulai permainan
+    alert('Permainan dimulai!');
+    // Di sini Anda bisa menambahkan kode untuk memulai permainan
+});
+
+document.getElementById('highscore-button').addEventListener('click', function() {
+    // Logika untuk menampilkan daftar high score
+    alert('Menampilkan daftar high score...');
+    // Di sini Anda bisa menambahkan kode untuk menampilkan high score
+});
+
+document.getElementById('credits-button').addEventListener('click', function() {
+    // Logika untuk menampilkan kredit
+    alert('Kredit permainan ini...');
+    // Di sini Anda bisa menambahkan kode untuk menampilkan kredit
+});
 
 function update() {
     requestAnimationFrame(update);
