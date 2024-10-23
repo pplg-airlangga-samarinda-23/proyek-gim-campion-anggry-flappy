@@ -1,4 +1,3 @@
-
 //board
 let board;
 let boardWidth = 360;
@@ -35,6 +34,8 @@ let velocityY = 0; //bird jump speed
 let gravity = 0.4;
 
 let gameOver = false;
+let score = 0;
+let highscore = 0;
 
 window.onload = function () {
     board = document.getElementById("board");
@@ -42,11 +43,9 @@ window.onload = function () {
     board.width = boardWidth;
     context = board.getContext("2d"); //used for drawing on the board
 
+    // Load skor dan highscore dari localStorage
     highscore = localStorage.getItem("highscore") ? parseFloat(localStorage.getItem("highscore")) : 0;
-    score = localStorage.getItem("score") ? parseFloat(localStorage.getItem("score")) : 0;       
-    //draw flappy bird
-    // context.fillStyle = "green";
-    // context.fillRect(bird.x, bird.y, bird.width, bird.height);
+    score = 0; // Memulai permainan baru, jadi score di-reset
 
     //load images
     birdImg = new Image();
@@ -62,7 +61,7 @@ window.onload = function () {
     bottomPipeImg.src = "./bottompipe.png";
 
     requestAnimationFrame(update);
-    setInterval(placePipes, 3000); //every 1.5 seconds
+    setInterval(placePipes, 3000); //every 3 seconds
     document.addEventListener("keydown", moveBird);
 }
 
@@ -75,13 +74,12 @@ function update() {
 
     //bird
     velocityY += gravity;
-    // bird.y += velocityY;
     bird.y = Math.max(bird.y + velocityY, 0); //apply gravity to current bird.y, limit the bird.y to top of the canvas
     context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
     if (bird.y > board.height) {
         gameOver = true;
-        localStorage.setItem
+        checkHighscore();
     }
 
     //pipes
@@ -91,13 +89,13 @@ function update() {
         context.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
 
         if (!pipe.passed && bird.x > pipe.x + pipe.width) {
-            score += 0.5; //0.5 because there are 2 pipes! so 0.5*2 = 1, 1 for each set of pipes
+            score += 0.5; //0.5 karena ada 2 pipa (atas dan bawah), jadi 0.5*2 = 1 untuk setiap set pipa
             pipe.passed = true;
-            localStorage.setItem("score",score);
         }
 
         if (detectCollision(bird, pipe)) {
             gameOver = true;
+            checkHighscore();
         }
     }
 
@@ -106,27 +104,14 @@ function update() {
         pipeArray.shift(); //removes first element from the array
     }
 
-    //score
+    // Display score dan highscore
     context.fillStyle = "black";
     context.font = "35px sans-serif";
-    context.fillText("score",5,30)
-    context.fillText( score, 5, 70);
+    context.fillText("Score:", 5, 30);
+    context.fillText(score, 5, 70);
 
-    context.fillStyle ="black";
-    context.font = "35px sans-serif";
-    context.fillText("highscore",200,30)
-    context.fillText(highscore,200,70)
-
-    if (gameOver) {
-        localStorage.setItem("score",score);
-        localStorage.setItem("highscore",highscore);
-        context.fillText("GAME OVER",50, 240);
-    }
-    if (score > highscore) {
-        highscore = score;
-        localStorage.setItem("highscore",highscore);
-        document.getElementById("highscore").innerText = highscore;
-    }
+    context.fillText("Highscore:", 200, 30);
+    context.fillText(highscore, 200, 70);
 
 }
 
@@ -135,9 +120,6 @@ function placePipes() {
         return;
     }
 
-    //(0-1) * pipeHeight/2.
-    // 0 -> -128 (pipeHeight/4)
-    // 1 -> -128 - 256 (pipeHeight/4 - pipeHeight/2) = -3/4 pipeHeight
     let randomPipeY = pipeY - pipeHeight / 4 - Math.random() * (pipeHeight / 2);
     let openingSpace = board.height / 3;
 
@@ -182,4 +164,14 @@ function detectCollision(a, b) {
         a.x + a.width > b.x &&   //a's top right corner passes b's top left corner
         a.y < b.y + b.height &&  //a's top left corner doesn't reach b's bottom left corner
         a.y + a.height > b.y;    //a's bottom left corner passes b's top left corner
+}
+
+function checkHighscore() {
+    if (score > highscore) {
+        highscore = score;
+        localStorage.setItem("highscore", highscore);
+        alert("game over" +"<br>"+"Selamat Anda mencetak rekor nilai tertinggi baru: " + highscore);
+    } else {
+        alert("Permainan selesai! Skor Anda: " + score);
+    }
 }
