@@ -189,6 +189,6 @@ function checkHighscore() {
         localStorage.setItem("highscore", highscore);
         alert("game over" +"<br>"+"Selamat Anda mencetak rekor nilai tertinggi baru: " + highscore);
     } else {
-        alert("Permainan selesai! Skor Anda: " + score);
+        context.fillText("game over", 100, 100);
     }
 }
