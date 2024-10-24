@@ -36,6 +36,7 @@ let gravity = 0.4;
 let gameOver = false;
 let score = 0;
 let highscore = 0;
+let gameOvercek = false;
 
 window.onload = function () {
     board = document.getElementById("board");
@@ -64,27 +65,32 @@ window.onload = function () {
     setInterval(placePipes, 3000); //every 3 seconds
     document.addEventListener("keydown", moveBird);
 }
-document.getElementById('start-button').addEventListener('click', function() {
-    // Logika untuk memulai permainan
+
+document.getElementById('start-button').addEventListener('click', function () {
+    bird.y = birdY;
+    pipeArray = [];
+    score = 0;
+    gameOver = false;
+    gameOvercek = false;
+    velocityY = 0;
     alert('Permainan dimulai!');
-    // Di sini Anda bisa menambahkan kode untuk memulai permainan
 });
 
-document.getElementById('highscore-button').addEventListener('click', function() {
-    // Logika untuk menampilkan daftar high score
-    alert('Menampilkan daftar high score...');
-    // Di sini Anda bisa menambahkan kode untuk menampilkan high score
+document.getElementById('highscore-button').addEventListener('click', function () {
+    alert('Highscore Anda: ' + highscore);
 });
 
-document.getElementById('credits-button').addEventListener('click', function() {
-    // Logika untuk menampilkan kredit
-    alert('Kredit permainan ini...');
-    // Di sini Anda bisa menambahkan kode untuk menampilkan kredit
+document.getElementById('credits-button').addEventListener('click', function () {
+    alert('Kredit: Permainan ini dibuat oleh [Nama Anda].');
 });
 
 function update() {
     requestAnimationFrame(update);
     if (gameOver) {
+        if (!gameOvercek) {
+            checkHighscore();
+            gameOvercek = true;
+        }
         return;
     }
     context.clearRect(0, 0, board.width, board.height);
@@ -96,7 +102,6 @@ function update() {
 
     if (bird.y > board.height) {
         gameOver = true;
-        checkHighscore();
     }
 
     //pipes
@@ -112,7 +117,6 @@ function update() {
 
         if (detectCollision(bird, pipe)) {
             gameOver = true;
-            checkHighscore();
         }
     }
 
@@ -172,6 +176,7 @@ function moveBird(e) {
             pipeArray = [];
             score = 0;
             gameOver = false;
+            gameOvercek = false;
         }
     }
 }
@@ -187,8 +192,8 @@ function checkHighscore() {
     if (score > highscore) {
         highscore = score;
         localStorage.setItem("highscore", highscore);
-        alert("game over" +"<br>"+"Selamat Anda mencetak rekor nilai tertinggi baru: " + highscore);
+        alert("Selamat! Anda mencetak rekor nilai tertinggi baru: " + highscore);
     } else {
-        context.fillText("game over", 100, 100);
+        alert("Permainan selesai! Skor Anda: " + score);
     }
 }
