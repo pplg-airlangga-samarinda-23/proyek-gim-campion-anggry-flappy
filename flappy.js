@@ -196,4 +196,13 @@ function checkHighscore() {
     } else {
         alert("Permainan selesai! Skor Anda: " + score);
     }
+    var konfirmasi = confirm("Apakah Anda ingin memulai game lagi?");
+    if (konfirmasi) {
+        bird.y = birdY;
+        pipeArray = [];
+        score = 0;
+        gameOver = false;
+    } else {
+        window.location.href = "index.html"; // Mengalihkan ke halaman awal
+    }
 }
